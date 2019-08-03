@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>{{username}}</title>
+		<link href="../bootstrap.css" rel="stylesheet" media="screen">
+		<style>
+			body{background-color: pink;}
+			#div{width: 60%;padding-left: 20%;}
+			.span1{color: firebrick; font-size: 20px;}
+			.span2{color: forestgreen;font-size: 18px; font-family: "bookshelf symbol 7";}
+			#sendMsg{position: relative;left:45%;top:15px}
+			#prvbtn{position: relative;left:45%;top:15px}
+			#btnmale{position: relative;left:35%;}
+			#btnfemale{position: relative;left:45%;}
+			#groupsend{position: relative;left:45%;top:15px}
+			#number{font-size: 25px; color: royalblue;}
+			#qm{font-size: 25px; color: mediumpurple;}
+		</style>
+	</head>
+	<body>
+		<div id="app">
+		<div id='divnumber'></div>
+		<hr />
+		<ul id='qunfa'></ul>
+		
+		<div id="div2">
+		
+			<div class="input-group input-group-lg">
+			<span class="input-group-addon">欢迎您：{{username}}</span>
+		<input type="text" name='msg' id='msg' class="form-control" placeholder="请输入群发内容"/>
+		</div >
+			<button id='sendMsg' type="submit" class="btn btn-success btn-lg">发送</button>
+		
+	<!--  欢迎您：{{username}}<input type="text" name='msg' id='msg'> <button id='sendMsg'>发送</button> -->
+		<hr />
+		<div id="qm">
+			个性签名：{{msg}}
+		</div>
+		<hr />
+		<div>
+			<select id='select' ></select>
+		</div>
+		
+		<div>
+			<div class="input-group input-group-lg">
+				<span class="input-group-addon">发送私聊</span>
+			<input type="text" name='msg' id="siliaotext" class="form-control" placeholder="请输入私聊内容"/>
+			</div >
+				<button id='prvbtn' type="submit" class="btn btn-success btn-lg">发送</button>
+				
+				
+			<!-- <input type="text" id="siliaotext" />
+			<button id='prvbtn'>发送私聊</button> -->
+			
+			<div >
+				<ul id="prvchat">
+					
+				</ul>
+			</div>
+		</div>
+		<hr />
+		<!--加入群组-->
+		<div>
+			<ul id="groupul"></ul>
+		</div>
+	
+		<div id="app">
+			<button id="btnmale" type="submit" class="btn btn-success btn-lg">加入男生组</button>
+			<button id="btnfemale" type="submit" class="btn btn-success btn-lg">加入女生组</button>
+			<!-- <button id="btnmale">加入男生群</button>
+			<button id="btnfemale">加入女生群</button> -->
+		<div class="input-group input-group-lg">
+			<span class="input-group-addon">群组聊天</span>
+		<input type="text" name='msg' id="grouptext" class="form-control" placeholder="请输入群组内容"/>
+		
+		</div ><button id="groupsend" type="submit" class="btn btn-success btn-lg">群发消息</button>	
+			<!-- <div>
+				<input type="text" id="grouptext"/><button id="groupsend">群发消息</button>
+			</div> -->
+			
+		</div>
+		</div>
+		</div>
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="../vue.min.js"></script>
+		<script src="../jquery-3.4.1.min.js"></script>
+		<script src="../bootstrap.min.js"></script>
+		<script type="text/javascript">
+			var prvTo;
+			var qun;
+			var select=document.getElementById('select');
+			
+		 var socket=io('http://localhost:8888')
+		 socket.on('connect',function(){
+			 console.log('连接上了');
+			 socket.emit('login',{
+				 id:{{id}}
+			 })
+		 })
+		 socket.emit('disconnect', function(){
+		   console.log('断开连接了');
+		 });
+		 document.getElementById('sendMsg').onclick=function(){
+			 var msg=document.getElementById('msg').value;
+			 
+		socket.emit('sendMsg',{
+			 msg:msg
+		 }) 
+		} 
+		socket.on('fanhui',function(data){
+			 document.getElementById('qunfa').innerHTML+=data.msg
+		 })
+		 socket.on('online',function(data){
+			 var user=Object.values(data);
+			 document.getElementById('divnumber').innerHTML=`<div id="number">当前在线人数:${user.length}</div>`;
+			 select.innerHTML="";
+			 for(var i in user){
+				 select.innerHTML+=`<option value=${user[i].socketid}>${user[i].username}</option>`
+			 }
+			 
+		 })
+		 document.getElementById('select').onchange=function(){
+			 prvTo=this.value;
+			 console.log(prvTo)
+		 }
+		 
+		 document.getElementById('prvbtn').onclick=function(){
+			 var prvmsg=document.getElementById('siliaotext').value;
+		 socket.emit('siliao',{
+			 prvTo,
+			 prvmsg
+		 })
+		 };
+		 socket.on('prvchat',function(data){
+			document.getElementById('prvchat').innerHTML+=data.msg
+		 })
+		document.getElementById('btnmale').onclick=function(){
+			socket.emit('joingroup',{
+				group:'malegroup'
+			});
+			qun='malegroup'
+		}
+		document.getElementById('btnfemale').onclick=function(){
+			socket.emit('joingroup',{
+				group:'femalegroup'
+			});
+			qun='femalegroup'
+		}
+		document.getElementById('groupsend').onclick=function(){
+			var groupmsg=document.getElementById('grouptext').value;
+			socket.emit('groupsend',{
+				qun,
+				groupmsg
+			})
+		}
+		socket.on('qunfa',function(data){
+			document.getElementById('groupul').innerHTML+=data.groupmsg
+		})
+		
+		</script>
+		 
+		 
+	</body>
+</html>
+ 

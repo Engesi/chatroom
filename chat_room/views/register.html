@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link href="../bootstrap.css" rel="stylesheet" media="screen">
+	<style>
+		body{background-color: cadetblue}
+		#div1{width:250px;
+		height: 100px;
+		padding: 10px;
+		margin-left: 48%;
+		position: relative;
+		left:-150px;
+		background-color: cadetblue;
+		font-size: 38px ;	
+		color: #8B3626;	
+		
+		}
+		#div2{width: 50%;
+		position: relative;
+		top:100px;
+		left: 300px;}
+		#btn{display: block;;
+			margin-left:650px; ;
+			margin-top:200px}
+	</style>
+	</head>
+	
+	<body>
+		<script src="../bootstrap.min.js"></script>
+		<div id="div1">聊天室注册</div>
+		<div id="div2">
+		<form action="/insert" method="post" class="bs-example bs-example-form" role="form">
+			<div class="input-group input-group-lg">
+			<span class="input-group-addon">用户名：</span>
+		<input type="text" name="username" class="form-control" placeholder="请输入昵称"/>
+		</div >
+			<br /><br />
+		<div class="input-group input-group-lg">
+		<span class="input-group-addon">&nbsp;&nbsp;密码：&nbsp;&nbsp;</span>
+		<input type="text" class="form-control" placeholder="请输入密码" name="password"/>
+		</div>
+			<br /><br />
+		<div class="input-group input-group-lg">
+		<span class="input-group-addon">&nbsp;个性签名：&nbsp;</span>
+		<input type="text" class="form-control" placeholder="请输入签名" name="msg"/>
+		</div>
+	
+		
+	
+		
+		</div>
+		<button id="btn" type="submit" class="btn btn-success btn-lg">注册</button>
+		</form>
+	</body>
+</html>
